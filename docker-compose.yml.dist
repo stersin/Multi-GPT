@@ -6,13 +6,19 @@ services:
   auto-gpt:
     depends_on:
       - redis
-    build: ./
+    build: 
+      context: .
+      args:
+        UID: 1000
+        GID: 1000
     env_file:
       - .env
     volumes:
-      - "./autogpt:/app"
-      - ".env:/app/.env"
+      - ".:/home/appuser/src"
+      - "./outputs/auto_gpt_workspace:/home/appuser/auto_gpt_workspace"
     profiles: ["exclude-from-up"]
+    working_dir: "/home/appuser/src"
+    user: 1000:1000
 
   redis:
     image: "redis/redis-stack-server:latest"
